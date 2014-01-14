@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html ng-app="Chat">
+  <head>
+    <title>GoInstant GoAngular Component Example</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Inline styles for the win -->
+    <style>
+      .container {
+        margin-top: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" ng-controller="ChatCtrl">
+      <h1>GoAngular Getting Started Example Chat</h1>
+      <section id="messages">
+        <div ng-repeat="message in messages">
+          <span class="muted">&lt;sam&gt;</span> {{ message }}
+        </div>
+      </section>
+      <form ng-submit="sendMessage()">
+        <input class="input" ng-model="newMessage" ng-disabled="sendingMessage">
+      </form>
+    </div>
+
+    <!-- Angular -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.1/angular.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+
+    <!-- CONFIG -->
+    <script src="../../config/config.js"></script>
+
+    <!-- Platform -->
+    <script src="https://cdn.goinstant.net/v1/platform.min.js"></script>
+
+    <!-- GoAngular -->
+    <script src="https://cdn.platform-staging.goinstant.org/integrations/goangular/latest/goangular.min.js"></script>
+    <script>
+      angular
+        .module('Chat', ['goangular'])
+        .config(function($goConnectionProvider) {
+          $goConnectionProvider.$set('<%- GOINSTANT_CONNECT_URL %>');
+        })
+        .controller('ChatCtrl', function($scope, $goKey) {
+          $scope.messages = $goKey('messages').$sync();
+          $scope.sendMessage = function() {
+            $scope.messages.$add($scope.newMessage, { expire: 5000 }).then(function() {
+              $scope.$apply(function() {
+                $scope.newMessage = '';
+              });
+            });
+          }
+        });
+    </script>
+  </body>
+</html>

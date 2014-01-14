@@ -1,0 +1,33 @@
+{
+  "name": "goangular-chat-example",
+  "version": "0.0.0",
+  "description": "GoAngular Chat Example App",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:mattcreager/goangular-chat-example.git"
+  },
+  "keywords": [
+    "goangular",
+    "goinstant",
+    "chat",
+    "real-time",
+    "realtime"
+  ],
+  "author": "Matthew Creager",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/mattcreager/goangular-chat-example/issues"
+  },
+  "dependencies": {
+    "express": "~3.4.8",
+    "ejs-locals": "~1.0.2"
+  },
+  "engines": {
+    "node": "0.10.x",
+    "npm": "1.2.x"
+  }
+}
