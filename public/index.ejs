@@ -27,7 +27,13 @@
       </section>
       <form role="form" class="well clearfix" ng-submit="sendMessage()">
         <div class="row">
-          <div class="col-xs-10">
+          <div class="col-xs-3">
+            <div class="input-group">
+              <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+              <input class="input input-lg form-control"placeholder="Your Name">
+            </div>
+          </div>
+          <div class="col-xs-7">
             <input class="input input-lg form-control" ng-model="newMessage" ng-disabled="sendingMessage" placeholder="What's up?">
           </div>
           <div class="col-xs-2">
@@ -40,7 +46,7 @@
       <ul class="gi-links">
         <li class="gi-logo"><a href="http://www.goinstant.com/" target="_blank"><img src="../img/goinstant-white.png" alt="GoInstant Docs"></a></li>
         <li><a href="http://goinstant.com/signup" target="_blank">Sign up free</a></li>
-        <li><a href="https://developers.goinstant.com/beta/widgets/webrtc.html" target="_blank">Docs &amp; API</a></li>
+        <li><a href="https://developers.goinstant.com/v1/GoAngular/index.html" target="_blank">Docs &amp; API</a></li>
       </ul>
       <ul class="gi-social">
         <li class="gi-label">Share with friends:</li>
