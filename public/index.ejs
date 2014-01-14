@@ -83,12 +83,25 @@
         .controller('ChatCtrl', function($scope, $goKey) {
           $scope.messages = $goKey('messages').$sync();
 
+          $scope.messages.$on('add', {
+            local: true,
+            listener: scrollOn
+          });
+
+          $scope.messages.$on('ready', scrollOn);
+
           $scope.sendMessage = function() {
             $scope.messages.$add($scope.newMessage, { expire: 5000 }).then(function() {
               $scope.$apply(function() {
                 $scope.newMessage = '';
               });
             });
+          }
+
+          function scrollOn() {
+            setTimeout(function() {
+              $('.table-wrapper').scrollTop($('.table-wrapper').children().height());
+            }, 0);
           }
         });
     </script>
