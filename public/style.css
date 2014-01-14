@@ -1,0 +1,65 @@
+html {
+  height: 100%;
+}
+
+body {
+  position: relative;
+  height: 100%;
+  background: #f7f7f7;
+}
+
+.container {
+  height: 90%;
+}
+
+  h1 {
+    margin: 1.5em 0 1em;
+    font-size: 1.5em;
+  }
+
+  #messages {
+    height: 65%;
+    border: 1px solid #ccc;
+    border-radius: 4px 4px 0 0;
+    background: white;
+    box-shadow: 0 2px 5px #ddd;
+    font-size: 1.1em;
+  }
+
+    #messages .table-wrapper {
+      height: 100%;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+      #messages .table {
+        margin-bottom: 0;
+      }
+
+        #messages .table tr:first-child td {
+          border-top: 0;
+        }
+
+      .message-username {
+        display: inline-block;
+        width: 130px;
+        padding: 0 15px 0 0;
+        text-align: left;
+        color: #999;
+        font-weight: 500;
+      }
+
+      .message-timestamp {
+        float: right;
+        font-size: .8em;
+        padding-top: 2px;
+        color: #bbb;
+      }
+
+  form.well {
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0 1px 3px #ddd;
+    border-color: #ccc;
+    border-top: 0;
+    background: #E8E9EB;
+  }
