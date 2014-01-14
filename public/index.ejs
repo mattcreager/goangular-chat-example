@@ -31,7 +31,7 @@
             <input class="input input-lg form-control" ng-model="newMessage" ng-disabled="sendingMessage" placeholder="What's up?">
           </div>
           <div class="col-xs-2">
-            <button type="button" class="btn btn-primary btn-lg btn-block">Send</button>
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Send</button>
           </div>
         </div>
       </form>
@@ -82,6 +82,7 @@
         })
         .controller('ChatCtrl', function($scope, $goKey) {
           $scope.messages = $goKey('messages').$sync();
+
           $scope.sendMessage = function() {
             $scope.messages.$add($scope.newMessage, { expire: 5000 }).then(function() {
               $scope.$apply(function() {
