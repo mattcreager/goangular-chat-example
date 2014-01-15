@@ -16,10 +16,12 @@
         <div class="table-wrapper">
           <table class="table">
             <tr ng-repeat="message in messages">
-              <td>
-                <span class="message-username">Username</span>
-                <span class="message-content">{{ message }}</span>
-                <span class="message-timestamp">4:19 PM</span>
+              <td class="message-username col-sm-2">
+                <span>Username</span>
+              </td>
+              <td class="message-content col-sm-10">
+                <span class="timestamp">4:19 PM</span>
+                {{ message }}
               </td>
             </tr>
           </table>

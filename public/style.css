@@ -40,21 +40,27 @@ body {
           border-top: 0;
         }
 
-      .message-username {
-        display: inline-block;
-        width: 130px;
-        padding: 0 15px 0 0;
-        text-align: left;
-        color: #999;
-        font-weight: 500;
-      }
+        .message-username {
+          background: #f7f7f7;
+          border-right: 1px solid #eee;
+          color: #999;
+          font-weight: 500;
+          font-size: .9em;
+          word-break: break-word;
+        }
 
-      .message-timestamp {
-        float: right;
-        font-size: .8em;
-        padding-top: 2px;
-        color: #bbb;
-      }
+        #messages .message-content {
+          /* Make room for timestamp */
+          padding-right: 10%;
+        }
+
+          #messages .message-content .timestamp {
+            position: absolute;
+            top: 10px;
+            right: 8px;
+            font-size: .8em;
+            color: #bbb;
+          }
 
   form.well {
     border-radius: 0 0 4px 4px;
