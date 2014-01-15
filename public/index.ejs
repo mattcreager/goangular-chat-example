@@ -17,11 +17,11 @@
           <table class="table">
             <tr ng-repeat="message in messages">
               <td class="message-username col-sm-2">
-                <span>Username</span>
+                <span>{{ message.author }}</span>
               </td>
               <td class="message-content col-sm-10">
                 <div class="settings">
-                  <span class="timestamp">4:19 PM</span>
+                  <!--<span class="timestamp">4:19 PM</span>-->
                   <div class="btn-group">
                     <button type="button" class="btn btn-link btn-xs dropdown-toggle" data-toggle="dropdown">
                       <span class="glyphicon glyphicon-chevron-down"></span>
@@ -32,7 +32,7 @@
                     </ul>
                   </div>
                 </div>
-                {{ message }}
+                {{ message.content }}
 
                 <!-- TODO -->
                 <!-- Show when editing
@@ -53,11 +53,11 @@
           <div class="col-xs-3">
             <div class="input-group">
               <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-              <input class="input input-lg form-control"placeholder="Your Name">
+              <input ng-model="author" class="input input-lg form-control" placeholder="Your Name">
             </div>
           </div>
           <div class="col-xs-7">
-            <input class="input input-lg form-control" ng-model="newMessage" ng-disabled="sendingMessage" placeholder="What's up?">
+            <input ng-model="newMessage" ng-disabled="sendingMessage" placeholder="What's up?" class="input input-lg form-control">
           </div>
           <div class="col-xs-2">
             <button type="submit" class="btn btn-primary btn-lg btn-block">Send</button>
@@ -120,7 +120,14 @@
           $scope.messages.$on('ready', scrollOn);
 
           $scope.sendMessage = function() {
-            $scope.messages.$add($scope.newMessage, { expire: 5000 }).then(function() {
+            if(!$scope.newMessage) {
+              return;
+            }
+
+            $scope.messages.$add({
+              content: $scope.newMessage,
+              author: $scope.author
+            }, { expire: 5000 }).then(function() {
               $scope.$apply(function() {
                 $scope.newMessage = '';
               });
