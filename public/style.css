@@ -51,15 +51,34 @@ body {
 
         #messages .message-content {
           /* Make room for timestamp */
-          padding-right: 10%;
+          padding-right: 15%;
         }
 
-          #messages .message-content .timestamp {
+          #messages .message-content .settings {
             position: absolute;
             top: 10px;
             right: 8px;
             font-size: .8em;
             color: #bbb;
+          }
+
+          #messages .message-content .dropdown-toggle {
+            font-size: .85em;
+            color: #ccc;
+          }
+
+            #messages .message-content .dropdown-toggle:hover,
+            #messages .message-content .open .dropdown-toggle {
+              color: #428BCA;
+            }
+
+        #messages .message-content textarea {
+          resize: vertical;
+        }
+
+          #messages .message-content .dropdown-menu {
+            left: auto;
+            right: 0;
           }
 
   form.well {

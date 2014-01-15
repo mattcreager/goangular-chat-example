@@ -20,8 +20,29 @@
                 <span>Username</span>
               </td>
               <td class="message-content col-sm-10">
-                <span class="timestamp">4:19 PM</span>
+                <div class="settings">
+                  <span class="timestamp">4:19 PM</span>
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-link btn-xs dropdown-toggle" data-toggle="dropdown">
+                      <span class="glyphicon glyphicon-chevron-down"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><a href="#"><span class="glyphicon glyphicon-edit"></span> Edit</a></li>
+                      <li><a href="#"><span class="glyphicon glyphicon-trash"></span> Remove</a></li>
+                    </ul>
+                  </div>
+                </div>
                 {{ message }}
+
+                <!-- TODO -->
+                <!-- Show when editing
+                <div class="col-xs-11">
+                  <textarea class="form-control" rows="1"></textarea>
+                </div>
+                <div class="col-xs-1">
+                  <button type="button" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-ok"></span></button>
+                </div>
+                -->
               </td>
             </tr>
           </table>
