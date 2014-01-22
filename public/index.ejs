@@ -127,7 +127,7 @@
             $scope.messages.$add({
               content: $scope.newMessage,
               author: $scope.author
-            }, { expire: 5000 }).then(function() {
+            }).then(function() {
               $scope.$apply(function() {
                 $scope.newMessage = '';
               });
