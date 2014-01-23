@@ -132,18 +132,16 @@
     </div>
 
     <!-- Angular -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.1/angular.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 
-    <!-- CONFIG -->
-    <script src="../../config/config.js"></script>
 
     <!-- Platform -->
     <script src="https://cdn.goinstant.net/v1/platform.min.js"></script>
 
     <!-- GoAngular -->
-    <script src="https://cdn.platform-staging.goinstant.org/integrations/goangular/latest/goangular.min.js"></script>
+    <script src="bower_components/goangular/dist/goangular.js"></script>
     <script>
       angular
         .module('Chat', ['goangular'])
@@ -174,6 +172,12 @@
               });
             });
           }
+
+          window.clearMessages = function() {
+            $scope.messages.$remove().then(function() {
+              console.log('messages have been cleared from ', '<%- GOINSTANT_CONNECT_URL %>');
+            });
+          };
 
           function scrollOn() {
             setTimeout(function() {
