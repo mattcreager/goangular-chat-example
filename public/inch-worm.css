@@ -6,10 +6,6 @@
   color: #efefef;
 }
 
-.inch-worm .tittle {
-
-}
-
 .inch-worm .collapse {
   display: block;
   width: 100%;
@@ -65,4 +61,8 @@
   background-color: #666666;
   padding: 5px 10px 5px 10px;
   margin: 0 2px 0 2px;
+}
+
+.inch-worm .wrapper .models .controls span.active {
+  color: #5bc0de;
 }
