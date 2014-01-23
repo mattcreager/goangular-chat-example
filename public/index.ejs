@@ -9,10 +9,12 @@
     <link href="gi-banner.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
     <link href="inch-worm.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://cdn.oesmith.co.uk/morris-0.4.3.min.css">
   </head>
   <body>
     <div class="container" ng-controller="ChatCtrl">
       <h1>GoAngular Getting Started Example Chat</h1>
+      <div id="myfirstchart" style="height: 250px;"></div>
       <section id="messages" class="clearfix">
         <div class="table-wrapper">
           <table class="table">
@@ -91,9 +93,13 @@
       </ul>
     </div>
 
-  <div class="inch-worm" ng-controller="InchwormCtrl as inchworm">
+  <div class="inch-worm" ng-controller="InchwormCtrl">
     <div class="collapse" ng-click="collapsed = !collapsed">
-      <span class="title">Inch Worm</span>
+      <span class="title"><em>Inchworm</em></span>
+      <div class="pull-right">
+        <span id="model-total"><span class="text-muted">total models:</span><span class="label label-info">{{ models | objectLength }}</span></span>
+         <span id="model-total"><span class="text-muted">average request duration:</span><span class="label label-info">{{ models  | totalAverageDuration | number:2 }} ms</span></span>
+      </div>
     </div>
     <div class="wrapper" ng-show="!collapsed">
       <div class="models">
@@ -109,18 +115,31 @@
               <span>Sync</span>
               <span>Bind</span>
             </div>
-            <div class="tabs">
-              <div ng-show="selected === 1" class="content">{{ model }}</div>
-              <div ng-show="selected === 2" class="content">
-                <table>
-                  <tr ng-repeat="(key, profile) in model.$$profile">
-                    <th>{{ key }}</th>
-                    <td>{{ profile.called }}</td>
-                    <td>{{ profle.totalDuration }}</td>
-                    <td>{{ profle.averageDuration }}</td>
-                    <td>{{ profle.high }}</td>
-                    <td>{{ profle.low }}</td>
-                  </tr>
+              <div ng-show="selected === 1" class="content">
+                <pre>{{ (model.$value || model | json) }}</pre>
+              </div>
+              <div ng-show="true" class="content">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>command</th>
+                      <th>call count</th>
+                      <th>total duration</th>
+                      <th>average</th>
+                      <th>min</th>
+                      <th>max</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="(command, profile) in model.$profiler()">
+                      <td><span class="label label-danger">{{ command }}</span></td>
+                      <td>{{ profile.length  }}</td>
+                      <td>{{ profile | totalDuration | number:2 }} ms</td>
+                      <td>{{ profile | averageDuration | number:2 }} ms</td>
+                      <td>{{ profile | minDuration | number:2 }} ms</td>
+                      <td>{{ profile | maxDuration | number:2 }} ms</td>
+                    </tr>
+                  </tbody>
                 </table>
               </div>
             <div>
@@ -134,8 +153,14 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 
+
     <!-- Lodash -->
     <script src="bower_components/lodash/dist/lodash.min.js"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="http://cdn.oesmith.co.uk/morris-0.4.3.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+
 
     <!-- Platform -->
     <script src="https://cdn.goinstant.net/v1/platform.min.js"></script>
@@ -148,9 +173,122 @@
         .config(function($goConnectionProvider) {
           $goConnectionProvider.$set('<%- GOINSTANT_CONNECT_URL %>');
         })
+        .filter('totalDuration', function() {
+          return function(data) {
+            console.log('called')
+            if (typeof(data) === 'undefined') {
+                return 0;
+            }
+
+            return _.reduce(data, function(a, b) {
+              return a + b.duration;
+            }, 0);
+          }
+        })
+        .filter('totalAverageDuration', function() {
+          return function(data) {
+            if (typeof(data) === 'undefined') {
+                return 0;
+            }
+
+            var profiles = _.map(data, function(model) {
+              return model.$profiler();
+            });
+
+            var sum = 0;
+            var duration = 0;
+            _.each(profiles, function(profile) {
+              _.each(profile, function(command) {
+                duration = duration + _.reduce(command, function(a, b) {
+                  sum++
+                  return a + b.duration;
+                }, 0);
+              })
+            });
+
+            return duration / sum;
+          }
+        })
+        .filter('averageDuration', function() {
+          return function(data) {
+            if (typeof(data) === 'undefined') {
+                return 0;
+            }
+
+            return (_.reduce(data, function(a, b) {
+              return a + b.duration;
+            }, 0) / data.length) || 0;
+          }
+        })
+        .filter('minDuration', function() {
+          return function(data) {
+            if (typeof(data) === 'undefined') {
+                return 0;
+            }
+
+            var durations = _.map(data, function(model) {
+              return model.duration;
+            });
+
+            if (durations.length < 1) {
+              return 0;
+            }
+
+            return Math.min.apply(null, durations);
+          }
+        })
+        .filter('maxDuration', function() {
+          return function(data) {
+            if (typeof(data) === 'undefined') {
+                return 0;
+            }
+
+            var durations = _.map(data, function(model) {
+              return model.duration;
+            });
+
+            if (durations.length < 1) {
+              return 0;
+            }
+
+            return Math.max.apply(null, durations);
+          }
+        })
+        .filter('objectLength', function() {
+          return function(data) {
+            if (typeof(data) === 'undefined') {
+                return 0;
+            }
+
+           return _.toArray(data).length;
+          }
+        })
         .controller('ChatCtrl', function($scope, $goKey) {
           $scope.messages = $goKey('messages').$sync();
 
+          //var message = $scope.messages.$key('id-143b143f484-000/content').$sync();
+          // message.$on('ready', function() {
+          //   console.log(message);
+          // })
+
+          new Morris.Bar({
+            element: 'myfirstchart',
+            data: [
+              { y: '2006', a: 100, b: 90 },
+              { y: '2007', a: 75,  b: 65 },
+              { y: '2008', a: 50,  b: 40 },
+              { y: '2009', a: 75,  b: 65 },
+              { y: '2010', a: 50,  b: 40 },
+              { y: '2011', a: 75,  b: 65 },
+              { y: '2012', a: 100, b: 90 }
+            ],
+            xkey: 'y',
+            ykeys: ['a', 'b'],
+            labels: ['Series A', 'Series B']
+          });
+
+
+          console.log($scope.messages);
           $scope.messages.$on('add', {
             local: true,
             listener: scrollOn
@@ -168,6 +306,7 @@
               author: $scope.author
             }).then(function() {
               $scope.$apply(function() {
+                console.log($scope.messages.$profiler('$add'));
                 $scope.newMessage = '';
               });
             });
@@ -184,24 +323,10 @@
               $('.table-wrapper').scrollTop($('.table-wrapper').children().height());
             }, 0);
           }
-        }).factory('iw-modelManager', function($goKey) {
-          return {
-            profile: function() {
-              return $goKey('messages').$sync()
-            }
-          };
-        }).controller('InchwormCtrl', ['$scope', 'iw-modelManager', function($scope, inchworm) {
-          var model = inchworm.profile();
-          $scope.models = {} || $scope.models;
-          $scope.models[model.$$key.name] = model;
-          model.$$profile = {
-            add: {
-              something: 'asdgajhkf'
-            }
-          };
-          $scope.models[model.$$key.name + '2'] = model;
-          $scope.length = _.keys($scope.models).length;
-        }]);
+        }).controller('InchwormCtrl', function($scope) {
+          console.log(window.iw.models)
+          $scope.models = window.iw.models;
+        });
     </script>
   </body>
 </html>
