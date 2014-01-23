@@ -8,6 +8,7 @@
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
     <link href="gi-banner.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
+    <link href="inch-worm.css" rel="stylesheet">
   </head>
   <body>
     <div class="container" ng-controller="ChatCtrl">
@@ -90,8 +91,48 @@
       </ul>
     </div>
 
+  <div class="inch-worm">
+  <div class="collapse" ng-click="collapsed = !collapsed">Inch Worm</div>
+    <div class="wrapper" ng-show="!collapsed" ng-controller="InchwormCtrl">
+      <div class="models">
+        <ul>
+          <li ng-repeat="(key, model) in models">
+          <span ng-click="tabs = !tabs" class="name">{{ key }}</span>
+            <div class="controls">
+              <span>Watch</span>
+              <span>Sync</span>
+              <span>Bind</span>
+            </div>
+            <div ng-show="tabs" class="tabs">
+              <div class="tab-wrapper">
+                <span ng-click="selected = 1"  class="tab">Value</span>
+                <span ng-click="selected = 2" class="tab">Context</span>
+                <span ng-click="selected = 3" class="tab">Profile</span>
+              </div>
+              <div ng-show="selected === 1" class="content">{{ model }}</div>
+              <div ng-show="selected === 2" class="content">context</div>
+              <div ng-show="selected === 3" class="content">
+                <ul>
+                  <table>
+                    <tr ng-repeat="(key, profile) in model.$$profile">
+                      <th>{{ key }}</th>
+                      <td>{{ profile.called }}</td>
+                      <td>{{ profle.totalDuration }}</td>
+                      <td>{{ profle.averageDuration }}</td>
+                      <td>{{ profle.high }}</td>
+                      <td>{{ profle.low }}</td>
+                    </tr>
+                  </table>
+                </ul>
+              </div>
+            <div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
     <!-- Angular -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.1/angular.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.1/angular.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 
@@ -139,7 +180,23 @@
               $('.table-wrapper').scrollTop($('.table-wrapper').children().height());
             }, 0);
           }
-        });
+        }).factory('iw-modelManager', function($goKey) {
+          return {
+            profile: function() {
+              return $goKey('messages').$sync()
+            }
+          };
+        }).controller('InchwormCtrl', ['$scope', 'iw-modelManager', function($scope, inchworm) {
+          var model = inchworm.profile();
+          $scope.models = {} || $scope.models;
+          $scope.models[model.$$key.name] = model;
+          model.$$profile = {
+            add: {
+              something: 'asdgajhkf'
+            }
+          };
+          $scope.models[model.$$key.name + '2'] = model;
+        }]);
     </script>
   </body>
 </html>
