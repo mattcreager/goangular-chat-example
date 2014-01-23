@@ -91,39 +91,38 @@
       </ul>
     </div>
 
-  <div class="inch-worm">
-  <div class="collapse" ng-click="collapsed = !collapsed">Inch Worm</div>
-    <div class="wrapper" ng-show="!collapsed" ng-controller="InchwormCtrl">
+  <div class="inch-worm" ng-controller="InchwormCtrl as inchworm">
+    <div class="collapse" ng-click="collapsed = !collapsed">
+      <span class="title">Inch Worm</span>
+      <span class="count"># of Models: {{ length }}</span>
+    </div>
+    <div class="wrapper" ng-show="!collapsed">
       <div class="models">
         <ul>
           <li ng-repeat="(key, model) in models">
-          <span ng-click="tabs = !tabs" class="name">{{ key }}</span>
+          <span class="name">{{ key }}</span>
+            <div class="tab-wrapper">
+              <span ng-click="selected = 1"  class="tab">Value</span>
+              <span ng-click="selected = 2" class="tab">Profile</span>
+            </div>
             <div class="controls">
               <span>Watch</span>
               <span>Sync</span>
               <span>Bind</span>
             </div>
-            <div ng-show="tabs" class="tabs">
-              <div class="tab-wrapper">
-                <span ng-click="selected = 1"  class="tab">Value</span>
-                <span ng-click="selected = 2" class="tab">Context</span>
-                <span ng-click="selected = 3" class="tab">Profile</span>
-              </div>
+            <div class="tabs">
               <div ng-show="selected === 1" class="content">{{ model }}</div>
-              <div ng-show="selected === 2" class="content">context</div>
-              <div ng-show="selected === 3" class="content">
-                <ul>
-                  <table>
-                    <tr ng-repeat="(key, profile) in model.$$profile">
-                      <th>{{ key }}</th>
-                      <td>{{ profile.called }}</td>
-                      <td>{{ profle.totalDuration }}</td>
-                      <td>{{ profle.averageDuration }}</td>
-                      <td>{{ profle.high }}</td>
-                      <td>{{ profle.low }}</td>
-                    </tr>
-                  </table>
-                </ul>
+              <div ng-show="selected === 2" class="content">
+                <table>
+                  <tr ng-repeat="(key, profile) in model.$$profile">
+                    <th>{{ key }}</th>
+                    <td>{{ profile.called }}</td>
+                    <td>{{ profle.totalDuration }}</td>
+                    <td>{{ profle.averageDuration }}</td>
+                    <td>{{ profle.high }}</td>
+                    <td>{{ profle.low }}</td>
+                  </tr>
+                </table>
               </div>
             <div>
           </li>
@@ -136,6 +135,8 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 
+    <!-- Lodash -->
+    <script src="bower_components/lodash/dist/lodash.min.js"></script>
 
     <!-- Platform -->
     <script src="https://cdn.goinstant.net/v1/platform.min.js"></script>
@@ -200,6 +201,7 @@
             }
           };
           $scope.models[model.$$key.name + '2'] = model;
+          $scope.length = _.keys($scope.models).length;
         }]);
     </script>
   </body>
