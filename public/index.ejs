@@ -15,7 +15,7 @@
       <section id="messages" class="clearfix">
         <div class="table-wrapper">
           <table class="table">
-            <tr ng-repeat="message in messages">
+            <tr ng-repeat="message in messages | keyFilter | orderBy:'$name'">
               <td class="message-username col-sm-2">
                 <span>{{ message.author }}</span>
               </td>
@@ -27,22 +27,13 @@
                       <span class="glyphicon glyphicon-chevron-down"></span>
                     </button>
                     <ul class="dropdown-menu">
-                      <li><a href="#"><span class="glyphicon glyphicon-edit"></span> Edit</a></li>
-                      <li><a href="#"><span class="glyphicon glyphicon-trash"></span> Remove</a></li>
+                      <li><a href="#" ng-click="editing = true"><span class="glyphicon glyphicon-edit"></span> Edit</a></li>
+                      <li><a href="#" ng-click="removeMessage(message.$name)"><span class="glyphicon glyphicon-trash"></span> Remove</a></li>
                     </ul>
                   </div>
                 </div>
                 {{ message.content }}
-
-                <!-- TODO -->
-                <!-- Show when editing
-                <div class="col-xs-11">
-                  <textarea class="form-control" rows="1"></textarea>
-                </div>
-                <div class="col-xs-1">
-                  <button type="button" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-ok"></span></button>
-                </div>
-                -->
+                <div editor ng-show="editing"></div>
               </td>
             </tr>
           </table>
@@ -53,7 +44,7 @@
           <div class="col-xs-3">
             <div class="input-group">
               <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-              <input ng-model="author" class="input input-lg form-control" placeholder="Your Name">
+              <input ng-model="author" class="input input-lg form-control" placeholder="Your Name" />
             </div>
           </div>
           <div class="col-xs-7">
@@ -103,43 +94,9 @@
 
     <!-- GoAngular -->
     <script src="https://cdn.platform-staging.goinstant.org/integrations/goangular/latest/goangular.min.js"></script>
-    <script>
-      angular
-        .module('Chat', ['goangular'])
-        .config(function($goConnectionProvider) {
-          $goConnectionProvider.$set('<%- GOINSTANT_CONNECT_URL %>');
-        })
-        .controller('ChatCtrl', function($scope, $goKey) {
-          $scope.messages = $goKey('messages').$sync();
-
-          $scope.messages.$on('add', {
-            local: true,
-            listener: scrollOn
-          });
-
-          $scope.messages.$on('ready', scrollOn);
-
-          $scope.sendMessage = function() {
-            if(!$scope.newMessage) {
-              return;
-            }
-
-            $scope.messages.$add({
-              content: $scope.newMessage,
-              author: $scope.author
-            }).then(function() {
-              $scope.$apply(function() {
-                $scope.newMessage = '';
-              });
-            });
-          }
-
-          function scrollOn() {
-            setTimeout(function() {
-              $('.table-wrapper').scrollTop($('.table-wrapper').children().height());
-            }, 0);
-          }
-        });
+    <script type="text/javascript">
+      window.connectUrl = '<%- GOINSTANT_CONNECT_URL %>';
     </script>
+    <script src="js/chat.js"></script>
   </body>
 </html>
