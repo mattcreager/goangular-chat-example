@@ -1,4 +1,5 @@
 node_modules
 bower_components
+
+*.log
 .env
-.DS_Store

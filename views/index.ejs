@@ -4,10 +4,9 @@
     <title>GoInstant GoAngular Component Example</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
-    <link href="gi-banner.css" rel="stylesheet">
-    <link href="style.css" rel="stylesheet">
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link href="/css/gi-banner.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
   </head>
   <body>
     <div class="container" ng-controller="ChatCtrl">
@@ -15,34 +14,17 @@
       <section id="messages" class="clearfix">
         <div class="table-wrapper">
           <table class="table">
-            <tr ng-repeat="message in messages">
+            <tr ng-repeat="message in messages | keyFilter | orderBy:'$name'">
               <td class="message-username col-sm-2">
                 <span>{{ message.author }}</span>
               </td>
               <td class="message-content col-sm-10">
                 <div class="settings">
-                  <!--<span class="timestamp">4:19 PM</span>-->
                   <div class="btn-group">
-                    <button type="button" class="btn btn-link btn-xs dropdown-toggle" data-toggle="dropdown">
-                      <span class="glyphicon glyphicon-chevron-down"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                      <li><a href="#"><span class="glyphicon glyphicon-edit"></span> Edit</a></li>
-                      <li><a href="#"><span class="glyphicon glyphicon-trash"></span> Remove</a></li>
-                    </ul>
+                    <a ng-click="remove(message.$name)" href="#"><span class="glyphicon glyphicon-trash"></span> Delete</a>
                   </div>
                 </div>
-                {{ message.content }}
-
-                <!-- TODO -->
-                <!-- Show when editing
-                <div class="col-xs-11">
-                  <textarea class="form-control" rows="1"></textarea>
-                </div>
-                <div class="col-xs-1">
-                  <button type="button" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-ok"></span></button>
-                </div>
-                -->
+                <p>{{ message.content }}</p>
               </td>
             </tr>
           </table>
@@ -90,56 +72,19 @@
       </ul>
     </div>
 
-    <!-- Angular -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.1/angular.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
-
-    <!-- CONFIG -->
-    <script src="../../config/config.js"></script>
-
-    <!-- Platform -->
-    <script src="https://cdn.goinstant.net/v1/platform.min.js"></script>
-
-    <!-- GoAngular -->
-    <script src="https://cdn.platform-staging.goinstant.org/integrations/goangular/latest/goangular.min.js"></script>
+    <!-- Config -->
     <script>
-      angular
-        .module('Chat', ['goangular'])
-        .config(function($goConnectionProvider) {
-          $goConnectionProvider.$set('<%- GOINSTANT_CONNECT_URL %>');
-        })
-        .controller('ChatCtrl', function($scope, $goKey) {
-          $scope.messages = $goKey('messages').$sync();
-
-          $scope.messages.$on('add', {
-            local: true,
-            listener: scrollOn
-          });
-
-          $scope.messages.$on('ready', scrollOn);
-
-          $scope.sendMessage = function() {
-            if(!$scope.newMessage) {
-              return;
-            }
-
-            $scope.messages.$add({
-              content: $scope.newMessage,
-              author: $scope.author
-            }).then(function() {
-              $scope.$apply(function() {
-                $scope.newMessage = '';
-              });
-            });
-          }
-
-          function scrollOn() {
-            setTimeout(function() {
-              $('.table-wrapper').scrollTop($('.table-wrapper').children().height());
-            }, 0);
-          }
-        });
+      window.connectUrl = '<%- connectUrl %>';
     </script>
+
+    <!-- Dependencies -->
+    <script src="https://cdn.goinstant.net/v1/platform.min.js"></script>
+    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/bower_components/angular/angular.js"></script>
+    <script src="/bower_components/goangular/dist/goangular.js"></script>
+
+    <!-- App -->
+    <script src="/js/chat.js"></script>
   </body>
 </html>
