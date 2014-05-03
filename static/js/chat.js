@@ -1,7 +1,7 @@
 /*jshint browser: true */
 /*global angular, $ */
 
-'ust strict';
+'use strict';
 
 var app = angular.module('Chat', ['goangular']);
 
